@@ -1,9 +1,9 @@
 import google.generativeai as genai
 import json
 
-# Multi-shot prompting: provide multiple examples in the prompt
+# Chain of thought prompting: ask the model to reason step by step
 
-def build_prompt(api_response, criteria, examples):
+def build_prompt(api_response, criteria):
     return f"""
 You are an API evaluator. Given the following API response and evaluation criteria, assess the API’s performance.
 
@@ -13,10 +13,7 @@ API Response:
 Evaluation Criteria:
 {criteria}
 
-Here are several examples of correct evaluations:
-{examples}
-
-Now, provide your evaluation as a JSON object with the following structure:
+Think step by step. First, analyze the API response for correctness. Next, evaluate its efficiency. Then, consider scalability. After reasoning through each criterion, summarize your evaluation as a JSON object with the following structure:
 {{
   "correctness": "<your assessment>",
   "efficiency": "<your assessment>",
@@ -42,24 +39,7 @@ criteria = """
 - Scalability: Can the API handle increased traffic and large data sets without performance degradation?
 """
 
-# Multi-shot examples
-examples = """
-Example 1:
-{
-  "correctness": "The API returns the correct user data as requested.",
-  "efficiency": "The response is quick and contains only necessary information.",
-  "scalability": "The structure supports adding more users and handling larger datasets."
-}
-
-Example 2:
-{
-  "correctness": "The API provides accurate results for the given query.",
-  "efficiency": "Minimal latency and optimized data transfer.",
-  "scalability": "Can efficiently process thousands of records without performance loss."
-}
-"""
-
-prompt = build_prompt(api_response, criteria, examples)
+prompt = build_prompt(api_response, criteria)
 
 # Example usage with Gemini API (replace 'your-api-key' with your actual key)
 genai.configure(api_key="your-api-key")
@@ -94,7 +74,6 @@ else:
     print("\nToken usage information not available.")
 
 # --- Video Explanation ---
-# Multi-shot prompting means providing the AI with multiple examples to guide its response.
-# In this code, the prompt includes two sample evaluations in JSON format.
-# This helps the model learn the expected structure, style, and variability for its own output.
-# Multi-shot prompting is useful when you want the model to generalize from several examples and produce more robust, context-aware responses.
+# Chain of thought prompting means instructing the AI to reason step by step before giving a final answer.
+# In this code, the prompt asks the model to analyze correctness, efficiency, and scalability one by one, then summarize its findings in a structured JSON output.
+# This approach helps the model produce more accurate, logical, and transparent responses by making its reasoning process
