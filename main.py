@@ -17,6 +17,7 @@ Return your evaluation as a JSON object with the following structure:
   "efficiency": "<your assessment>",
   "scalability": "<your assessment>"
 }}
+<END>
 """
 
 # Example dynamic input
@@ -47,7 +48,8 @@ response = model.generate_content(
     generation_config={
         "top_p": 0.8,      # Top P parameter
         "temperature": 0.7, # Temperature parameter
-        "top_k": 40        # Top K parameter added
+        "top_k": 40,        # Top K parameter
+        "stop_sequences": ["<END>"] # Stop sequence added
     }
 )
 
@@ -56,7 +58,9 @@ print(response.text)
 
 # Try to parse structured output as JSON
 try:
-    structured_output = json.loads(response.text)
+    # Remove the stop sequence if present
+    cleaned_text = response.text.split("<END>")[0].strip()
+    structured_output = json.loads(cleaned_text)
     print("\nStructured Output:")
     print(json.dumps(structured_output, indent=2))
 except Exception as e:
@@ -70,7 +74,7 @@ else:
     print("\nToken usage information not available.")
 
 # --- Video Explanation ---
-# Structured output in LLMs means instructing the model to return its response in a specific format, such as JSON.
-# This makes it easier to parse, validate, and use the output programmatically.
-# In this code, the prompt asks the AI to return its evaluation as a JSON object with defined fields.
-# The code then attempts to parse the response as JSON, demonstrating structured output in action.
+# Stop sequence in LLMs is a special string that tells the model when to stop generating further output.
+# It helps control the length and format of responses, ensuring the output ends at a desired point.
+# In this code, "<END>" is used as a stop sequence, so the model stops generating text when it encounters this string.
+# This is useful for structured outputs and prevents unwanted trailing text.
