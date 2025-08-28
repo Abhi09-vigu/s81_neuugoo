@@ -1,22 +1,9 @@
 import google.generativeai as genai
 import json
 
-# Define a function schema for function calling
-function_schema = {
-    "name": "evaluate_api",
-    "description": "Evaluates an API response for correctness, efficiency, and scalability.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "correctness": {"type": "string", "description": "Assessment of correctness."},
-            "efficiency": {"type": "string", "description": "Assessment of efficiency."},
-            "scalability": {"type": "string", "description": "Assessment of scalability."}
-        },
-        "required": ["correctness", "efficiency", "scalability"]
-    }
-}
+# Multi-shot prompting: provide multiple examples in the prompt
 
-def build_prompt(api_response, criteria):
+def build_prompt(api_response, criteria, examples):
     return f"""
 You are an API evaluator. Given the following API response and evaluation criteria, assess the API’s performance.
 
@@ -25,6 +12,17 @@ API Response:
 
 Evaluation Criteria:
 {criteria}
+
+Here are several examples of correct evaluations:
+{examples}
+
+Now, provide your evaluation as a JSON object with the following structure:
+{{
+  "correctness": "<your assessment>",
+  "efficiency": "<your assessment>",
+  "scalability": "<your assessment>"
+}}
+<END>
 """
 
 # Example dynamic input
@@ -44,12 +42,28 @@ criteria = """
 - Scalability: Can the API handle increased traffic and large data sets without performance degradation?
 """
 
-prompt = build_prompt(api_response, criteria)
+# Multi-shot examples
+examples = """
+Example 1:
+{
+  "correctness": "The API returns the correct user data as requested.",
+  "efficiency": "The response is quick and contains only necessary information.",
+  "scalability": "The structure supports adding more users and handling larger datasets."
+}
+
+Example 2:
+{
+  "correctness": "The API provides accurate results for the given query.",
+  "efficiency": "Minimal latency and optimized data transfer.",
+  "scalability": "Can efficiently process thousands of records without performance loss."
+}
+"""
+
+prompt = build_prompt(api_response, criteria, examples)
 
 # Example usage with Gemini API (replace 'your-api-key' with your actual key)
 genai.configure(api_key="your-api-key")
 model = genai.GenerativeModel("gemini-pro")
-
 response = model.generate_content(
     prompt,
     generation_config={
@@ -57,20 +71,21 @@ response = model.generate_content(
         "temperature": 0.7,
         "top_k": 40,
         "stop_sequences": ["<END>"]
-    },
-    tools=[function_schema],  # Function calling schema
-    tool_config={"function_call": "evaluate_api"}  # Instruct model to call the function
+    }
 )
 
 print("Raw AI response:")
 print(response.text)
 
-# Try to extract function call arguments if present
-if hasattr(response, "function_call") and response.function_call:
-    print("\nFunction Call Arguments:")
-    print(json.dumps(response.function_call["arguments"], indent=2))
-else:
-    print("\nNo function call arguments found.")
+# Try to parse structured output as JSON
+try:
+    cleaned_text = response.text.split("<END>")[0].strip()
+    structured_output = json.loads(cleaned_text)
+    print("\nStructured Output:")
+    print(json.dumps(structured_output, indent=2))
+except Exception as e:
+    print("\nCould not parse structured output as JSON.")
+    print(f"Error: {e}")
 
 # Log the number of tokens used (if available)
 if hasattr(response, "usage_metadata") and "total_tokens" in response.usage_metadata:
@@ -79,8 +94,7 @@ else:
     print("\nToken usage information not available.")
 
 # --- Video Explanation ---
-# Function calling in LLMs allows the model to return structured outputs that can trigger specific functions in code.
-# The model is given a schema describing the function and its parameters.
-# When the model's output matches the schema, the function can be called programmatically with the returned arguments.
-# This enables seamless integration between LLMs and software systems, automating tasks and workflows.
-# In this code, the Gemini model is instructed to call the 'evaluate_api' function and return its arguments in a structured way.
+# Multi-shot prompting means providing the AI with multiple examples to guide its response.
+# In this code, the prompt includes two sample evaluations in JSON format.
+# This helps the model learn the expected structure, style, and variability for its own output.
+# Multi-shot prompting is useful when you want the model to generalize from several examples and produce more robust, context-aware responses.
