@@ -73,8 +73,19 @@ if hasattr(response, "usage_metadata") and "total_tokens" in response.usage_meta
 else:
     print("\nToken usage information not available.")
 
+# --- Embeddings Example ---
+# Generate embeddings for a sample text using Gemini API
+sample_text = "Neuugoo is an AI-powered interactive learning ecosystem."
+
+embedding_model = genai.GenerativeModel("embedding-001") # Use Gemini's embedding model
+embedding_response = embedding_model.embed_content([sample_text])
+
+print("\nEmbedding vector for sample text:")
+print(embedding_response["embedding"])
+
 # --- Video Explanation ---
-# Stop sequence in LLMs is a special string that tells the model when to stop generating further output.
-# It helps control the length and format of responses, ensuring the output ends at a desired point.
-# In this code, "<END>" is used as a stop sequence, so the model stops generating text when it encounters this string.
-# This is useful for structured outputs and prevents unwanted trailing text.
+# Embeddings in LLMs are high-dimensional numerical representations of text.
+# They capture the semantic meaning of words, sentences, or documents, allowing models to compare and analyze text efficiently.
+# Embeddings are computed by passing text through a neural network, resulting in a vector.
+# Practical applications include semantic search, clustering, recommendation systems, and measuring text similarity.
+# In this code, we generate an embedding for a sample sentence, which can be used for these tasks.
