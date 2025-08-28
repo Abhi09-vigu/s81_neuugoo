@@ -1,74 +1,74 @@
-# s81_neuugoo
-Neuugoo – Personalized AI Learning Companion
+    # s81_neuugoo
+    Neuugoo – Personalized AI Learning Companion
 
-Neuugo is an AI-powered interactive learning ecosystem that adapts to each student’s pace, style, and goals. It combines AI tutoring, immersive 3D gamification, and smart productivity tools to make studying engaging, personalized, and effective.
+    Neuugo is an AI-powered interactive learning ecosystem that adapts to each student’s pace, style, and goals. It combines AI tutoring, immersive 3D gamification, and smart productivity tools to make studying engaging, personalized, and effective.
 
-🚀 Features
+    🚀 Features
 
-🎯 Adaptive Learning
+    🎯 Adaptive Learning
 
-AI-generated personalized study paths
+    AI-generated personalized study paths
 
-Smart quizzes, flashcards, and coding challenges
+    Smart quizzes, flashcards, and coding challenges
 
-Tailored explanations using analogies and real-world examples
+    Tailored explanations using analogies and real-world examples
 
-🌍 Immersive 3D Learning World
+    🌍 Immersive 3D Learning World
 
-Explore themed zones (Math City, Science Forest, History Castle)
+    Explore themed zones (Math City, Science Forest, History Castle)
 
-React Three Fiber + Three.js for interactive 3D environments
+    React Three Fiber + Three.js for interactive 3D environments
 
-Gamified progression: badges, coins, and unlockable levels
+    Gamified progression: badges, coins, and unlockable levels
 
-📝 AI Notes & Summaries
+    📝 AI Notes & Summaries
 
-Upload PDFs, textbooks, or notes → get AI-generated summaries
+    Upload PDFs, textbooks, or notes → get AI-generated summaries
 
-Visual mind maps and structured notes
+    Visual mind maps and structured notes
 
-Export as Markdown, PDF, or Flashcards
+    Export as Markdown, PDF, or Flashcards
 
-⏳ Productivity & Focus Tools
+    ⏳ Productivity & Focus Tools
 
-AI-driven Pomodoro study coach
+    AI-driven Pomodoro study coach
 
-Productivity tracking dashboard with analytics
+    Productivity tracking dashboard with analytics
 
-Motivational nudges with animations & sound effects
+    Motivational nudges with animations & sound effects
 
-🎙 Voice & Chat AI Tutor
+    🎙 Voice & Chat AI Tutor
 
-Built-in AI tutor chatbot for Q&A
+    Built-in AI tutor chatbot for Q&A
 
-Voice-enabled explanations for “hands-free learning”
+    Voice-enabled explanations for “hands-free learning”
 
-Function Calling to fetch formulas, facts, and examples
+    Function Calling to fetch formulas, facts, and examples
 
-🛠 Tech Stack
+    🛠 Tech Stack
 
-Frontend
+    Frontend
 
-Next.js (React Framework)
+    Next.js (React Framework)
 
-TailwindCSS + Framer Motion (animations & UI styling)
+    TailwindCSS + Framer Motion (animations & UI styling)
 
-Three.js + React Three Fiber (3D immersive zones)
+    Three.js + React Three Fiber (3D immersive zones)
 
-Backend
+    Backend
 
-Node.js + Express.js (API & authentication)
+    Node.js + Express.js (API & authentication)
 
-MongoDB (store users, progress, notes, and quizzes)
+    MongoDB (store users, progress, notes, and quizzes)
 
-AI & Data
+    AI & Data
 
-OpenAI GPT APIs (tutoring, summarization, quizzes)
+    OpenAI GPT APIs (tutoring, summarization, quizzes)
 
-RAG (Retrieval-Augmented Generation) with Wikipedia / educational datasets
+    RAG (Retrieval-Augmented Generation) with Wikipedia / educational datasets
 
-Deployment
+    Deployment
 
-Vercel (Frontend)
+    Vercel (Frontend)
 
-Render / Railway / Heroku (Backend)
+    Render / Railway / Heroku (Backend)
