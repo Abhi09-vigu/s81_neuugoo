@@ -1,28 +1,28 @@
 import google.generativeai as genai
 import json
 
-# --- RTFC Framework ---
-# RTFC stands for Role, Task, Format, and Constraints.
-# It helps design clear, effective prompts for LLMs.
+# One-shot prompting: provide one example in the prompt
 
-# System prompt (Role, Task, Format, Constraints)
-system_prompt = """
-You are Neuugoo, an expert AI tutor and evaluator for personalized learning platforms.
-Your task is to assess API responses for correctness, efficiency, and scalability.
-Format your output as a JSON object with fields: correctness, efficiency, scalability.
-Constraints: Be concise, objective, and use only information from the provided API response and criteria.
-"""
-
-# User prompt (provides context and request)
-def build_user_prompt(api_response, criteria):
+def build_prompt(api_response, criteria, example):
     return f"""
+You are an API evaluator. Given the following API response and evaluation criteria, assess the API’s performance.
+
 API Response:
 {api_response}
 
 Evaluation Criteria:
 {criteria}
 
-Please provide your evaluation.
+Here is an example of a correct evaluation:
+{example}
+
+Now, provide your evaluation as a JSON object with the following structure:
+{{
+  "correctness": "<your assessment>",
+  "efficiency": "<your assessment>",
+  "scalability": "<your assessment>"
+}}
+<END>
 """
 
 # Example dynamic input
@@ -42,13 +42,22 @@ criteria = """
 - Scalability: Can the API handle increased traffic and large data sets without performance degradation?
 """
 
-user_prompt = build_user_prompt(api_response, criteria)
+# One-shot example
+example = """
+{
+  "correctness": "The API returns the correct user data as requested.",
+  "efficiency": "The response is quick and contains only necessary information.",
+  "scalability": "The structure supports adding more users and handling larger datasets."
+}
+"""
+
+prompt = build_prompt(api_response, criteria, example)
 
 # Example usage with Gemini API (replace 'your-api-key' with your actual key)
 genai.configure(api_key="your-api-key")
 model = genai.GenerativeModel("gemini-pro")
 response = model.generate_content(
-    [system_prompt, user_prompt],
+    prompt,
     generation_config={
         "top_p": 0.8,
         "temperature": 0.7,
@@ -77,7 +86,7 @@ else:
     print("\nToken usage information not available.")
 
 # --- Video Explanation ---
-# The RTFC framework stands for Role, Task, Format, and Constraints.
-# In this code, the system prompt sets the role (AI tutor/evaluator), task (assess API responses), format (JSON), and constraints (concise, objective, use only provided info).
-# The user prompt provides the context and request.
-# This structure ensures the LLM understands its job, how to respond, and any boundaries, resulting in clear and reliable
+# One-shot prompting means providing the AI with a single example to guide its response.
+# In this code, the prompt includes one sample evaluation in JSON format.
+# This helps the model understand the expected structure and style for its own output.
+# One-shot prompting is useful when you want the model to mimic a specific format or approach, but don't
